@@ -1,5 +1,4 @@
-body{
-            
+body {
     height: 100vh;
     margin: 0;
     display: flex;
@@ -8,10 +7,30 @@ body{
     align-items: center;
     background-color: #222;
     flex-direction: column;
-    background-image: url(bg1.jpg);
+    background-image: url('bg1.jpg');
     background-size: cover;
+    background-position: center;
+    font-family: 'Outfit', sans-serif;
 }
 
+.scoreboard {
+    font-size: 24px;
+    color: white;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding: 15px 30px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
 
 #container {
     position: relative;
@@ -19,56 +38,76 @@ body{
     height: 100%;
     overflow: hidden;
 }
-.scoreboard {
-    font-size: 24px;
-    color: white;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    width: 80%;
-    margin-bottom: 10px;
-}
-
 
 .dynamic-div {
-
-    width: 8vw; /* Responsive size */
-    height: 8vw;
-    min-width: 50px; /* Minimum size for smaller screens */
-    min-height: 50px;
-    align-items: center;
     position: absolute;
-    justify-content: center;
-    border-radius: 50%;
     display: flex;
-    font-size: 3vw; /* Responsive text */
-    font-weight: bold;
-    color: white;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 3vw;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.95);
     cursor: pointer;
-    animation: floatUp 6s linear forwards;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+    
+    /* Realistic Soap Bubble Styling */
+    background: radial-gradient(150% 150% at 30% 20%, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.1) 30%, rgba(0,0,0,0) 100%);
+    box-shadow: 
+        inset 0 0 15px rgba(255, 255, 255, 0.4),
+        inset 10px 0 30px rgba(255, 255, 255, 0.3),
+        inset -10px 0 30px rgba(255, 255, 255, 0.3),
+        inset 0 -10px 30px rgba(255, 255, 255, 0.3),
+        0 10px 20px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+
+    /* We will use CSS variables in JS for dynamic animations */
+    animation: floatUp var(--float-duration, 6s) linear forwards,
+               var(--sway-anim, swayLeft) var(--sway-duration, 2s) ease-in-out infinite alternate;
+               
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s ease-out;
 }
 
-@keyframes floatUp{
+.dynamic-div:hover {
+    transform: scale(1.05);
+}
 
-    0%{
-        transform: translateY(0);
+.dynamic-div.pop-anim {
+    transform: scale(1.5);
+    opacity: 0;
+    box-shadow: 
+        inset 0 0 50px rgba(255, 255, 255, 1), 
+        0 0 30px rgba(255, 255, 255, 0.8);
+    transition: transform 0.15s ease-out, opacity 0.15s ease-out;
+}
+
+@keyframes floatUp {
+    0% {
+        bottom: -150px;
+        opacity: 0;
+    }
+    5% {
         opacity: 1;
     }
-    100%{
-        transform: translateY(-100vh);
+    90% {
         opacity: 1;
+    }
+    100% {
+        bottom: calc(100vh + 150px);
+        opacity: 0;
     }
 }
 
-@media(max-Width : 600px){
+@keyframes swayLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-40px); }
+}
 
-    .dynamic-div{
-
-        width: 10vw;
-        height: 10vw;
-        font-size: 4vw;
-        animation-duration: 4s;
-    }
+@keyframes swayRight {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(40px); }
 }
 
 #gameover {
@@ -78,22 +117,43 @@ body{
     transform: translate(-50%, -50%);
     font-size: 5rem;
     color: white;
-    font-weight: bold;
+    font-weight: 800;
     display: none;
-    animation: gameOverAnim 2s ease-in-out forwards;
-
+    padding: 40px 80px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    animation: gameOverAnim 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    z-index: 100;
+    text-align: center;
 }
 
 @keyframes gameOverAnim {
     0% {
-        transform: translate(-50%, -50%) scale(0);
+        transform: translate(-50%, -50%) scale(0.5);
         opacity: 0;
-    }
-    50% {
-        transform: translate(-50%, -50%) scale(1.2);
-        opacity: 1;
     }
     100% {
         transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+@media(max-width: 600px) {
+    .scoreboard {
+        font-size: 18px;
+        padding: 10px 20px;
+        width: 90%;
+    }
+    #gameover {
+        font-size: 3rem;
+        padding: 20px 40px;
+    }
+    .dynamic-div {
+        font-size: 5vw;
     }
 }
